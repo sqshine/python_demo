@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from random import choice
+from example_package import foo
 
 
 class Person:
@@ -12,7 +13,6 @@ class Person:
         self.age = 1
 
     def __str__(self):
-
         return self.make_greeting()
 
     def make_greeting(self):
@@ -28,6 +28,7 @@ def main():
     person = choice(people)
     person.age = 10
     print(person)
+    print(foo.CONSTANT)
 
 
 if __name__ == '__main__':

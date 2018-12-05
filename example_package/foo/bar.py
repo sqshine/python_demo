@@ -1,0 +1,1 @@
+CONSTANT = 'example constant'
