@@ -80,17 +80,17 @@ import numpy as np
 # #############################################################################
 # stack: columns in the data to the rows
 # unstack: from the rows into the columns
-data = pd.DataFrame(np.arange(6).reshape(2, 3),
-                    index=pd.Index(['Ohio', 'Colorado'], name='state'),
-                    columns=pd.Index(['one', 'two', 'three'], name='number'))
-result = data.stack()
-result.unstack()
-
-s1 = pd.Series([0, 1, 2, 3], index=['a', 'b', 'c', 'd'])
-s2 = pd.Series([4, 5, 6], index=['c', 'd', 'e'])
-
-data2 = pd.concat([s1, s2], keys=['one', 'two'])
-data2.unstack()
+# data = pd.DataFrame(np.arange(6).reshape(2, 3),
+#                     index=pd.Index(['Ohio', 'Colorado'], name='state'),
+#                     columns=pd.Index(['one', 'two', 'three'], name='number'))
+# result = data.stack()
+# result.unstack()
+#
+# s1 = pd.Series([0, 1, 2, 3], index=['a', 'b', 'c', 'd'])
+# s2 = pd.Series([4, 5, 6], index=['c', 'd', 'e'])
+#
+# data2 = pd.concat([s1, s2], keys=['one', 'two'])
+# data2.unstack()
 
 # MultiIndex(levels=[['one', 'two'], ['a', 'b', 'c', 'd', 'e']],labels=[[0, 0, 0, 0, 1, 1, 1], [0, 1, 2, 3, 2, 3, 4]])
 # levels和labels对应关系 [['one'->0, 'two'->1], ['a'->0, 'b'->1, 'c'->2, 'd'->3, 'e'->4]]
@@ -104,4 +104,47 @@ data2.unstack()
 # two  c    4
 #      d    5
 #      e    6
-print(data2.index)
+# print(data2.index)
+
+
+# df = pd.DataFrame({'left': result, 'right': result + 5},
+#                   columns=pd.Index(['left', 'right'], name='side'))
+# df.unstack('state')
+# df.unstack('state').stack('side')
+
+
+# Pivoting “Long” to “Wide” Format
+# data = pd.DataFrame(np.random.randn(6, 3),
+#                     columns=['realgdp', 'infl', 'unemp'])
+# data['year'] = [1959, 1959, 1959, 1959, 1960, 1960]
+# data['quarter'] = [1, 2, 3, 4, 1, 2]
+# periods = pd.PeriodIndex(year=data.year, quarter=data.quarter, name='date')
+# columns = pd.Index(['realgdp', 'infl', 'unemp'], name='item')
+# data = data.reindex(columns=columns)
+# data.index = periods.to_timestamp('D', 'end')
+# ldata = data.stack().reset_index().rename(columns={0: 'value'})
+#
+# pivoted = ldata.pivot('date', 'item', 'value')
+# print(pivoted)
+# ldata['value2'] = np.random.randn(len(ldata))
+# print(ldata[:10])
+# pivoted = ldata.pivot('date', 'item')
+# print(pivoted[:5])
+# print(pivoted['value'][:5])
+# unstacked = ldata.set_index(['date', 'item']).unstack('item')
+# print(unstacked[:7])
+
+# Pivoting “Wide” to “Long” Format
+df = pd.DataFrame({'key': ['foo', 'bar', 'baz'],
+                   'A': [1, 2, 3],
+                   'B': [4, 5, 6],
+                   'C': [7, 8, 9]})
+melted = pd.melt(df, ['key'])
+print(melted)
+reshaped = melted.pivot('key', 'variable', 'value')
+print(reshaped)
+reshaped = reshaped.reset_index()
+print(reshaped)
+pd.melt(df, id_vars=['key'], value_vars=['A', 'B'])
+pd.melt(df, value_vars=['A', 'B', 'C'])
+pd.melt(df, value_vars=['key', 'A', 'B'])
